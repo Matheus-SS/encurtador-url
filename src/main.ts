@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppConfig, validateEnvVars } from './shared/config';
+import { AppConfig, DatabaseConfig, validateEnvVars } from './shared/config';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -13,6 +13,9 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
 
   const AppConfig = configService.get<AppConfig>('app') as AppConfig;
+  const DatabaseConfig = configService.get<DatabaseConfig>(
+    'database',
+  ) as DatabaseConfig;
 
   app.enableCors({
     origin: AppConfig.corsOrigin,
@@ -21,7 +24,7 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.setGlobalPrefix('/v1/api/');
+  app.setGlobalPrefix('/api/v1/');
 
   const config = new DocumentBuilder()
     .setTitle('Url shortener')
@@ -36,8 +39,9 @@ async function bootstrap() {
   }
 
   log.debug(JSON.stringify(AppConfig));
+  log.debug(JSON.stringify(DatabaseConfig));
 
   await app.listen(AppConfig.port);
   log.log(`Server running on port ${AppConfig.port}`);
 }
-bootstrap();
+bootstrap().catch(console.error);
