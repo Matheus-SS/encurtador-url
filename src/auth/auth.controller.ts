@@ -1,12 +1,15 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto, SignUpDtoResponse } from './dto/signup.dto';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
+import { SignInDto, SignInDtoResponse } from './dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -42,8 +45,43 @@ export class AuthController {
       statusCode: 409,
     },
   })
-  @Post('signin')
+  @Post('signup')
   async signup(@Body() signup: SignUpDto) {
     return await this.authService.signup(signup);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Route that signin a user',
+  })
+  @ApiBadRequestResponse({
+    description: 'Input validation',
+    example: {
+      message: [
+        'email must be an email',
+        'email should not be empty',
+        'email must be a string',
+        'password should not be empty',
+        'password must be a string',
+      ],
+      error: 'Bad Request',
+      statusCode: 400,
+    },
+  })
+  @ApiOkResponse({
+    description: 'Request successfully',
+    type: SignInDtoResponse,
+  })
+  @ApiNotFoundResponse({
+    description: 'Email or password incorrect',
+    example: {
+      message: 'Email or password incorrect',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  })
+  @Post('signin')
+  async signin(@Body() signin: SignInDto) {
+    return await this.authService.signin(signin);
   }
 }

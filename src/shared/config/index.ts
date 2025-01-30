@@ -2,6 +2,8 @@ export interface AppConfig {
   port: number;
   NODE_ENV: 'development' | 'production';
   corsOrigin: string;
+  jwtSecret: string;
+  jwtExpiresIn: string;
 }
 export interface DatabaseConfig {
   client: string;
@@ -28,6 +30,8 @@ export function validateEnvVars() {
   verifyEnvVars('PORT');
   verifyEnvVars('NODE_ENV');
   verifyEnvVars('CORS_ORIGIN');
+  verifyEnvVars('JWT_SECRET');
+  verifyEnvVars('JWT_EXPIRES_IN');
   verifyEnvVars('DATABASE_CLIENT');
   verifyEnvVars('DATABASE_HOST');
   verifyEnvVars('DATABASE_PORT');
@@ -40,17 +44,18 @@ export function configuration(): Config {
   return {
     app: {
       port: +(process.env.PORT || 3000),
-      NODE_ENV:
-        (process.env.NODE_ENV as 'development' | 'production') || 'development',
-      corsOrigin: process.env.CORS_ORIGIN || '*',
+      NODE_ENV: process.env.NODE_ENV as 'development' | 'production',
+      corsOrigin: process.env.CORS_ORIGIN as string,
+      jwtSecret: process.env.JWT_SECRET as string,
+      jwtExpiresIn: process.env.JWT_EXPIRES_IN as string,
     },
     database: {
-      client: process.env.DATABASE_CLIENT || 'postgres',
-      host: process.env.DATABASE_HOST || 'localhost',
+      client: process.env.DATABASE_CLIENT as string,
+      host: process.env.DATABASE_HOST as string,
       port: +(process.env.DATABASE_PORT || 5432),
-      user: process.env.DATABASE_USER || 'root',
-      password: process.env.DATABASE_PASSWORD || 'root',
-      name: process.env.DATABASE_NAME || 'blizzard',
+      user: process.env.DATABASE_USER as string,
+      password: process.env.DATABASE_PASSWORD as string,
+      name: process.env.DATABASE_NAME as string,
     },
   };
 }
