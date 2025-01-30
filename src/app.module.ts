@@ -6,7 +6,9 @@ import { configuration, DatabaseConfig } from './shared/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersEntity } from '@src/modules/users/entities/user.entity';
 import { UsersModule } from '@src/modules/users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from '@src/modules/auth/auth.module';
+import { ShortUrlsModule } from '@src/modules/short-urls/short-urls.module';
+import { ShortUrlEntity } from '@src/modules/short-urls/entities/short-urls.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -27,7 +29,7 @@ import { AuthModule } from './auth/auth.module';
           username: dbConfig.user,
           password: dbConfig.password,
           database: dbConfig.name,
-          entities: [UsersEntity],
+          entities: [UsersEntity, ShortUrlEntity],
           synchronize: false,
           autoLoadEntities: true,
           logging: true,
@@ -36,6 +38,7 @@ import { AuthModule } from './auth/auth.module';
     }),
     UsersModule,
     AuthModule,
+    ShortUrlsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

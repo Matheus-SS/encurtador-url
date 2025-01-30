@@ -14,4 +14,5 @@ export type CreateUser = {
 export interface IUsersRepository {
   findByEmail(email: string): Promise<User | null>;
   create(data: CreateUser): Promise<User>;
+  findById(user_id: number): Promise<User | null>;
 }

@@ -1,0 +1,49 @@
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Injectable } from '@nestjs/common';
+import {
+  CreateShortUrl,
+  IShortUrlsRepository,
+  ShortUrl,
+} from './short-urls.repository.interface';
+import { ShortUrlEntity } from './entities/short-urls.entity';
+
+@Injectable()
+export class ShortUrlsRepository implements IShortUrlsRepository {
+  constructor(
+    @InjectRepository(ShortUrlEntity)
+    private readonly shortUrlsRepository: Repository<ShortUrlEntity>,
+  ) {}
+
+  async create(data: CreateShortUrl): Promise<ShortUrl> {
+    const shortUrl = this.shortUrlsRepository.create({
+      short_code: data.short_code,
+      original_url: data.original_url,
+      user_id: data.user_id,
+    });
+    const savedShortUrl = await this.shortUrlsRepository.save(shortUrl);
+    return savedShortUrl;
+  }
+
+  async findByShortCode(
+    short_code: string,
+    options?: { user_id: number },
+  ): Promise<ShortUrl | null> {
+    let condition: { short_code: string; user_id?: number } = {
+      short_code: short_code,
+    };
+
+    if (options?.user_id !== undefined) {
+      condition = {
+        user_id: options.user_id,
+        short_code: short_code,
+      };
+    }
+
+    const short_url = await this.shortUrlsRepository.findOne({
+      where: condition,
+    });
+
+    return short_url;
+  }
+}

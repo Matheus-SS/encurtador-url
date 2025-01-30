@@ -4,6 +4,7 @@ export interface AppConfig {
   corsOrigin: string;
   jwtSecret: string;
   jwtExpiresIn: string;
+  apiUrl: string;
 }
 export interface DatabaseConfig {
   client: string;
@@ -32,6 +33,7 @@ export function validateEnvVars() {
   verifyEnvVars('CORS_ORIGIN');
   verifyEnvVars('JWT_SECRET');
   verifyEnvVars('JWT_EXPIRES_IN');
+  verifyEnvVars('API_URL');
   verifyEnvVars('DATABASE_CLIENT');
   verifyEnvVars('DATABASE_HOST');
   verifyEnvVars('DATABASE_PORT');
@@ -48,6 +50,7 @@ export function configuration(): Config {
       corsOrigin: process.env.CORS_ORIGIN as string,
       jwtSecret: process.env.JWT_SECRET as string,
       jwtExpiresIn: process.env.JWT_EXPIRES_IN as string,
+      apiUrl: process.env.API_URL as string,
     },
     database: {
       client: process.env.DATABASE_CLIENT as string,
