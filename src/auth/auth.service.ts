@@ -2,7 +2,7 @@ import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { USERS_REPOSITORY } from '@src/shared/constants';
 import { IUsersRepository } from '@src/modules/users/users.repository.interface';
 import * as bcrypt from 'bcrypt';
-import { SignUpDto } from './dto/signup.dto';
+import { SignUpDto, SignUpDtoResponse } from './dto/signup.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +11,7 @@ export class AuthService {
     private readonly userRepository: IUsersRepository,
   ) {}
 
-  async signup(signup: SignUpDto) {
+  async signup(signup: SignUpDto): Promise<SignUpDtoResponse> {
     const userFound = await this.userRepository.findByEmail(signup.email);
 
     if (userFound) {
