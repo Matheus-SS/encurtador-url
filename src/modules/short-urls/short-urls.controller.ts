@@ -1,4 +1,12 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseGuards,
+  Get,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
 import { ShortUrlService } from './short-urls.service';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
 import { OptionalJwtAuthGuard } from '@src/shared/guard/optional-jwt-auth.guard';
@@ -8,8 +16,11 @@ import {
   ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
+import { JwtAuthGuard } from '@src/shared/guard/jwt-auth.guard';
+import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
 @ApiBearerAuth()
 @Controller('short-url')
 export class ShortUrlController {
@@ -47,5 +58,27 @@ export class ShortUrlController {
     @UserId() user_id?: number,
   ) {
     return await this.shortUrlService.create(createShortUrlDto, user_id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Route that return all url from a logged in user',
+  })
+  @ApiOkResponse({
+    description: 'Request successfully',
+    type: [GetUserShortUrlsResponse],
+  })
+  @ApiNotFoundResponse({
+    description: 'User id from token not found',
+    example: {
+      message: 'User not found',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  })
+  @UseGuards(JwtAuthGuard)
+  @Get('/my-urls')
+  async getUserShortUrls(@UserId() user_id: number) {
+    return await this.shortUrlService.getUserShortUrls(user_id);
   }
 }

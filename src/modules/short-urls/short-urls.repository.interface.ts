@@ -21,4 +21,5 @@ export interface IShortUrlsRepository {
     short_code: string,
     options?: { user_id: number },
   ): Promise<ShortUrl | null>;
+  findByUserId(user_id: number): Promise<ShortUrl[]>;
 }

@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { SHORT_URLS_REPOSITORY, USERS_REPOSITORY } from '@src/shared/constants';
 import { IShortUrlsRepository } from './short-urls.repository.interface';
 import { IUsersRepository } from '@src/modules/users/users.repository.interface';
+import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
 
 @Injectable()
 export class ShortUrlService {
@@ -39,6 +40,21 @@ export class ShortUrlService {
     return {
       url: this.generateShortUrlLink(shortCode),
     };
+  }
+
+  async getUserShortUrls(user_id: number): Promise<GetUserShortUrlsResponse[]> {
+    const user = await this.userRepository.findById(user_id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const urls = await this.shortUrlsRepository.findByUserId(user_id);
+
+    return urls.map((url) => ({
+      ...url,
+      short_url_link: this.generateShortUrlLink(url.short_code),
+    }));
   }
 
   private generateShortCode(): string {

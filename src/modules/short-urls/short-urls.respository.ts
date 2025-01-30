@@ -46,4 +46,14 @@ export class ShortUrlsRepository implements IShortUrlsRepository {
 
     return short_url;
   }
+
+  async findByUserId(user_id: number): Promise<ShortUrl[]> {
+    const short_url = await this.shortUrlsRepository.find({
+      where: {
+        user_id: user_id,
+      },
+    });
+
+    return short_url;
+  }
 }
