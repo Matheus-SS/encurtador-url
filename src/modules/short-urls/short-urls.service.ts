@@ -5,6 +5,7 @@ import { SHORT_URLS_REPOSITORY, USERS_REPOSITORY } from '@src/shared/constants';
 import { IShortUrlsRepository } from './short-urls.repository.interface';
 import { IUsersRepository } from '@src/modules/users/users.repository.interface';
 import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
+import { UpdateShortUrlDto } from './dto/update-short-url.dto';
 
 @Injectable()
 export class ShortUrlService {
@@ -55,6 +56,47 @@ export class ShortUrlService {
       ...url,
       short_url_link: this.generateShortUrlLink(url.short_code),
     }));
+  }
+
+  async getOriginalUrl(short_code: string): Promise<{ url: string }> {
+    const shortUrl = await this.shortUrlsRepository.findByShortCode(short_code);
+
+    if (!shortUrl) {
+      throw new NotFoundException('Short url not found');
+    }
+
+    await this.shortUrlsRepository.incrementClickCount(short_code);
+
+    return {
+      url: shortUrl.original_url,
+    };
+  }
+
+  async updateShortUrl(
+    user_id: number,
+    short_code: string,
+    { original_url }: UpdateShortUrlDto,
+  ): Promise<void> {
+    const user = await this.userRepository.findById(user_id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const short_url = await this.shortUrlsRepository.findByShortCode(
+      short_code,
+      {
+        user_id: user_id,
+      },
+    );
+
+    if (!short_url) {
+      throw new NotFoundException('Short url not found');
+    }
+
+    await this.shortUrlsRepository.update(short_url.id, {
+      original_url: original_url,
+    });
   }
 
   private generateShortCode(): string {

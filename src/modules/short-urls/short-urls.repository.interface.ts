@@ -22,4 +22,6 @@ export interface IShortUrlsRepository {
     options?: { user_id: number },
   ): Promise<ShortUrl | null>;
   findByUserId(user_id: number): Promise<ShortUrl[]>;
+  incrementClickCount(short_code: string): Promise<void>;
+  update(id: number, options?: { original_url: string }): Promise<void>;
 }

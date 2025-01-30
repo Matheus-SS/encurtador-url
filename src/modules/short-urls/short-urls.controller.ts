@@ -6,6 +6,9 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
+  Res,
+  Patch,
 } from '@nestjs/common';
 import { ShortUrlService } from './short-urls.service';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
@@ -21,7 +24,8 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@src/shared/guard/jwt-auth.guard';
 import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
-@ApiBearerAuth()
+import { Response } from 'express';
+import { UpdateShortUrlDto } from './dto/update-short-url.dto';
 @Controller('short-url')
 export class ShortUrlController {
   constructor(private readonly shortUrlService: ShortUrlService) {}
@@ -52,6 +56,7 @@ export class ShortUrlController {
     },
   })
   @Post()
+  @ApiBearerAuth()
   @UseGuards(OptionalJwtAuthGuard)
   async create(
     @Body() createShortUrlDto: CreateShortUrlDto,
@@ -76,9 +81,76 @@ export class ShortUrlController {
       statusCode: 404,
     },
   })
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @Get('/my-urls')
   async getUserShortUrls(@UserId() user_id: number) {
     return await this.shortUrlService.getUserShortUrls(user_id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Route that redirects to the original url',
+  })
+  @ApiNotFoundResponse({
+    description: 'Short url not found',
+    example: {
+      message: 'Short url not found',
+      error: 'Not Found',
+      statusCode: 404,
+    },
+  })
+  @Get('r/:short_code')
+  async getOriginalUrl(
+    @Param('short_code') short_code: string,
+    @Res() res: Response,
+  ) {
+    const result = await this.shortUrlService.getOriginalUrl(short_code);
+    return res.redirect(result.url);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Route that updates the original url',
+  })
+  @ApiOkResponse({
+    description: 'Request successfully',
+    example: 'Short url updated successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found responses',
+    examples: {
+      userNotFound: {
+        summary: 'User id from token not found',
+        value: {
+          message: 'User not found',
+          error: 'Not Found',
+          statusCode: 404,
+        },
+      },
+      shortUrlNotFound: {
+        summary: 'Not found url with given short code',
+        value: {
+          message: 'Short url not found',
+          error: 'Not Found',
+          statusCode: 404,
+        },
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Patch(':short_code')
+  async updateShortUrl(
+    @UserId() user_id: number,
+    @Param('short_code') short_code: string,
+    @Body() updateShortUrlDto: UpdateShortUrlDto,
+  ) {
+    await this.shortUrlService.updateShortUrl(
+      user_id,
+      short_code,
+      updateShortUrlDto,
+    );
+    return 'Short url updated successfully';
   }
 }

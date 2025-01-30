@@ -7,6 +7,7 @@ import {
   ShortUrl,
 } from './short-urls.repository.interface';
 import { ShortUrlEntity } from './entities/short-urls.entity';
+import { getCurrentDate } from '@src/shared/utils';
 
 @Injectable()
 export class ShortUrlsRepository implements IShortUrlsRepository {
@@ -55,5 +56,21 @@ export class ShortUrlsRepository implements IShortUrlsRepository {
     });
 
     return short_url;
+  }
+
+  async incrementClickCount(short_code: string): Promise<void> {
+    await this.shortUrlsRepository.query(
+      `
+      UPDATE short_urls SET click_count = click_count + 1, updated_at = $1 WHERE short_code = $2  
+    `,
+      [getCurrentDate(), short_code],
+    );
+  }
+
+  async update(id: number, options?: { original_url: string }): Promise<void> {
+    await this.shortUrlsRepository.update(
+      { id: id },
+      { original_url: options?.original_url },
+    );
   }
 }
