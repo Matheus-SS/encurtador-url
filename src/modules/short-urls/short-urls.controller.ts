@@ -9,6 +9,7 @@ import {
   Param,
   Res,
   Patch,
+  Delete,
 } from '@nestjs/common';
 import { ShortUrlService } from './short-urls.service';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
@@ -152,5 +153,45 @@ export class ShortUrlController {
       updateShortUrlDto,
     );
     return 'Short url updated successfully';
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Route that updates the field deleted_at in the table short_urls',
+  })
+  @ApiOkResponse({
+    description: 'Request successfully',
+    example: 'Short url deleted successfully',
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found responses',
+    examples: {
+      userNotFound: {
+        summary: 'User id from token not found',
+        value: {
+          message: 'User not found',
+          error: 'Not Found',
+          statusCode: 404,
+        },
+      },
+      shortUrlNotFound: {
+        summary: 'Not found url with given short code',
+        value: {
+          message: 'Short url not found',
+          error: 'Not Found',
+          statusCode: 404,
+        },
+      },
+    },
+  })
+  @ApiBearerAuth()
+  @UseGuards(JwtAuthGuard)
+  @Delete(':short_code')
+  async removeShortUrl(
+    @UserId() user_id: number,
+    @Param('short_code') short_code: string,
+  ) {
+    await this.shortUrlService.deleteShortUrl(user_id, short_code);
+    return 'Short url deleted successfully';
   }
 }

@@ -73,4 +73,21 @@ export class ShortUrlsRepository implements IShortUrlsRepository {
       { original_url: options?.original_url },
     );
   }
+
+  async softDeleteByUserId(
+    user_id: number,
+    options?: { short_code: string },
+  ): Promise<number | undefined> {
+    let query: { user_id: number; short_code?: string } = { user_id: user_id };
+
+    if (options?.short_code !== undefined) {
+      query = {
+        short_code: options.short_code,
+        user_id: user_id,
+      };
+    }
+    const { affected } = await this.shortUrlsRepository.softDelete(query);
+
+    return affected;
+  }
 }

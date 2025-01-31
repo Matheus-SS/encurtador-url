@@ -24,4 +24,8 @@ export interface IShortUrlsRepository {
   findByUserId(user_id: number): Promise<ShortUrl[]>;
   incrementClickCount(short_code: string): Promise<void>;
   update(id: number, options?: { original_url: string }): Promise<void>;
+  softDeleteByUserId(
+    user_id: number,
+    options?: { short_code: string },
+  ): Promise<number | undefined>;
 }

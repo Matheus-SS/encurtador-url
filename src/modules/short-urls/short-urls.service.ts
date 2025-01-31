@@ -99,6 +99,29 @@ export class ShortUrlService {
     });
   }
 
+  async deleteShortUrl(user_id: number, short_code: string): Promise<void> {
+    const user = await this.userRepository.findById(user_id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const short_url = await this.shortUrlsRepository.findByShortCode(
+      short_code,
+      {
+        user_id: user_id,
+      },
+    );
+
+    if (!short_url) {
+      throw new NotFoundException('Short url not found');
+    }
+
+    await this.shortUrlsRepository.softDeleteByUserId(user_id, {
+      short_code: short_code,
+    });
+  }
+
   private generateShortCode(): string {
     const chars =
       'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
