@@ -41,35 +41,33 @@ docker-compose -v
    cd encurtador-url
    ```
 2. **Instale as dependências**
-    ```sh
-    npm ci
-    ```
+   ```sh
+   npm ci
+   ```
 3. **Variáveis de Ambiente**
 Crie um arquivo `.env.development` na raiz do projeto e cole os dados do arquivo `.env.example` nele.
 
 4. **Compile o Projeto**
-```sh
-npm run build
-```
-
+   ```sh
+   npm run build
+   ```
 5. **Execute o docker compose para subir o banco de dados**
-    ```sh
-    docker-compose -f docker-compose.local.yml up -d
-    ```
+   ```sh
+   docker-compose -f docker-compose.local.yml up -d
+   ```
 5. **Execute as migrations  do banco de dados**
-```sh
-npm run migration:run
-```
-
+   ```sh
+   npm run migration:run
+   ```
 7. **Inicie o servidor**
-```sh
-npm run start:dev
-```
+   ```sh
+   npm run start:dev
+   ```
 
 8. **Testes**
-```sh
-npm run test
-```
+   ```sh
+   npm run test
+   ```
 
 9. **Acesse os ambiente de  desenvolvimento:**
    - API: `http://localhost:3000`
@@ -81,10 +79,10 @@ O projeto conta com monitoramento via Prometheus e Grafana. Eles não executados
 ### 🐳 **Executando com Docker Compose de monitoramento**
 
 1. Suba os containers de monitoramento com o Docker Compose:
-   ```sh
    Na raiz do projeto execute:
-   docker-compose -f ./monitoring/docker-compose.local.monitoring.yml up
-   ```
+```sh
+docker-compose -f ./monitoring/docker-compose.local.monitoring.yml up
+```
 2. Acesse a aplicação:
    - Prometheus: `http://localhost:9090`
    - Grafana: `http://localhost:3010`
@@ -162,8 +160,8 @@ O projeto conta com monitoramento via Prometheus e Grafana. Eles não executados
 ### 🐳 **Executando com Docker Compose de Monitoramento**
 
 1. Suba os containers de monitoramento com o Docker Compose:
-   ```sh
    Na raiz do projeto execute:
+   ```sh
    docker-compose -f ./monitoring/docker-compose.monitoring.yml up
    ```
 2. Acesse a aplicação:
@@ -183,7 +181,7 @@ A API inclui métricas personalizadas coletadas por Prometheus:
     Este gráfico mostra um teste de carga de requisições para o endpoint de criação de usuário, utilizando o K6 para realizar o load testing.
 </div>
 
-![Grafana gráfico quantidade ](https://i.ibb.co/cSBZSS4b/grafana.png)
+![Grafana gráfico quantidade signup](https://res.cloudinary.com/dmc3joteb/image/upload/v1738471776/grafana_pi1ioj.png)
 
 
 
