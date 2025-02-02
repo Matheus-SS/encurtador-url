@@ -89,7 +89,7 @@ export class ShortUrlController {
     return await this.shortUrlService.getUserShortUrls(user_id);
   }
 
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.FOUND)
   @ApiOperation({
     summary: 'Route that redirects to the original url',
   })
@@ -107,6 +107,7 @@ export class ShortUrlController {
     @Res() res: Response,
   ) {
     const result = await this.shortUrlService.getOriginalUrl(short_code);
+
     return res.redirect(result.url);
   }
 

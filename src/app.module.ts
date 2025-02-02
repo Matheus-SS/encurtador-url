@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -9,6 +9,11 @@ import { UsersModule } from '@src/modules/users/users.module';
 import { AuthModule } from '@src/modules/auth/auth.module';
 import { ShortUrlsModule } from '@src/modules/short-urls/short-urls.module';
 import { ShortUrlEntity } from '@src/modules/short-urls/entities/short-urls.entity';
+import {
+  makeCounterProvider,
+  PrometheusModule,
+} from '@willsoto/nestjs-prometheus';
+import { CustomMetricsMiddleware } from './shared/middlewares/custom-metrics.middleware';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -36,11 +41,32 @@ import { ShortUrlEntity } from '@src/modules/short-urls/entities/short-urls.enti
         };
       },
     }),
+    PrometheusModule.register({
+      path: 'metrics',
+    }),
     UsersModule,
     AuthModule,
     ShortUrlsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    makeCounterProvider({
+      name: 'count',
+      help: 'metric_help',
+      labelNames: ['method', 'origin'],
+    }),
+    makeCounterProvider({
+      name: 'gauge',
+      help: 'metric_help',
+    }),
+  ],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(CustomMetricsMiddleware).exclude('/metrics').forRoutes({
+      path: '*',
+      method: RequestMethod.ALL,
+    });
+  }
+}

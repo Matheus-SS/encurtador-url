@@ -1,7 +1,8 @@
+version: '3.8'
 services:
   db:
     image: postgres:16.4-alpine3.19
-    container_name: encurtador-url-db
+    container_name: shortener-url-db
     restart: always
     environment:
       POSTGRES_PASSWORD: root
@@ -11,3 +12,33 @@ services:
       - 5432:5432
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+    networks:
+      - app-network-shortener-url
+  shortener-url-api:
+    build: .
+    image: shortener-url-api
+    container_name: shortener-url-api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - CORS_ORIGIN=*
+      - JWT_SECRET=secret
+      - JWT_EXPIRES_IN=12h
+      - API_URL=http://localhost:3000
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=blizzard
+    ports:
+      - 3000:3000
+    networks:
+      - app-network-shortener-url
+networks:
+  app-network-shortener-url:
+    name: app-network-shortener-url #definir nome da rede sem pegar tambem o nome da pasta
+    driver: bridge

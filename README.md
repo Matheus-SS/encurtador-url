@@ -1,99 +1,189 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🚀 Projeto de Encurtamento de URL
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📌 Visão Geral
+Este projeto tem como objetivo criar uma API para encurtamento de URLs seguindo boas práticas de desenvolvimento.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🌍 Pré-requisitos
 
-## Description
+Antes de começar, verifique se você tem as seguintes ferramentas instaladas:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
+### 🔹 **Node.js** (Versão 22.13.1)
+O Node.js é necessário para rodar o servidor da API. Verifique a versão instalada com o seguinte comando:
+```sh
+node -v
 ```
 
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+### 🔹 **npm** (Gerenciador de Pacotes do Node.js  - Versão 10.9.2) 
+O npm é utilizado para gerenciar as dependências do projeto. Verifique a versão instalada com:
+```sh
+npm -v
 ```
 
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+### 🔹 **Docker**
+Docker é necessário para a criação e execução dos containers do projeto. Verifique a versão instalada com:
+```sh
+docker -v
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g mau
-$ mau deploy
+### 🔹 **Docker**
+O Docker Compose é utilizado para orquestrar múltiplos containers. Verifique a versão instalada com:
+```sh
+docker-compose -v
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🌍 Configuração Inicial
 
-## Resources
+### 🛠 **Passos para Inicializar o Projeto**
 
-Check out a few resources that may come in handy when working with NestJS:
+1. **Clone o Repositório**:
+   ```sh
+   git clone https://github.com/Matheus-SS/encurtador-url.git
+   cd encurtador-url
+   ```
+2. **Instale as dependências**
+    ```sh
+    npm ci
+    ```
+3. **Variáveis de Ambiente**
+Crie um arquivo `.env.development` na raiz do projeto e cole os dados do arquivo `.env.example` nele.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+4. **Compile o Projeto**
+```sh
+npm run build
+```
 
-## Support
+5. **Execute o docker compose para subir o banco de dados**
+    ```sh
+    docker-compose -f docker-compose.local.yml up -d
+    ```
+5. **Execute as migrations  do banco de dados**
+```sh
+npm run migration:run
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+7. **Inicie o servidor**
+```sh
+npm run start:dev
+```
 
-## Stay in touch
+8. **Testes**
+```sh
+npm run test
+```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+9. **Acesse os ambiente de  desenvolvimento:**
+   - API: `http://localhost:3000`
+   - API Docs: `http://localhost:3000/docs`
 
-## License
+## 📊 Monitoramento com Prometheus e Grafana
+O projeto conta com monitoramento via Prometheus e Grafana. Eles não executados junto com o docker-compose.local.yml. Fica a seu critério se quer utilizá-lo.
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### 🐳 **Executando com Docker Compose de monitoramento**
+
+1. Suba os containers de monitoramento com o Docker Compose:
+   ```sh
+   Na raiz do projeto execute:
+   docker-compose -f ./monitoring/docker-compose.local.monitoring.yml up
+   ```
+2. Acesse a aplicação:
+   - Prometheus: `http://localhost:9090`
+   - Grafana: `http://localhost:3010`
+     - Usuário: `admin`
+     - Senha: `admin`
+
+## 🏗 Estrutura do Banco de Dados
+A API utiliza um banco de dados relacional postegreSQL com a seguinte estrutura de tabelas:
+
+### **Tabela `users`**
+| Campo       | Tipo    | Descrição |
+|------------|--------|------------|
+| `id`        | int | Identificador único do usuário |
+| `email`     | varchar | E-mail do usuário |
+| `password`  | varchar | Senha criptografada do usuário |
+| `created_at` | timestampz   | Data de criação |
+| `updated_at` | timestampz   | Data da última atualização |
+
+### **Tabela `short_urls`**
+| Campo         | Tipo    | Descrição |
+|--------------|--------|------------|
+| `id`          | int | Identificador único da URL encurtada |
+| `original_url` | text | URL original |
+| `short_code`  | varchar | Código encurtado da URL |
+| `user_id`     | int | Referência ao usuário dono da URL (pode ser nulo) |
+| `click_count` | int | Quantidade de acessos |
+| `created_at`  | timestampz   | Data de criação |
+| `updated_at`  | timestampz   | Data da última atualização |
+| `deleted_at`  | timestampz   | Data da remoção (soft delete) |
+
+## 🌍 Endpoints da API
+
+### 🔑 **Autenticação**
+- `POST /api/v1/auth/signin` - Login com e-mail e senha, retorna um Bearer Token.
+- `POST /api/v1/auth/signup` - Cadastro de novos usuários.
+
+### 🔗 **Gerenciamento de URLs**
+- `POST /api/v1/short-url` - Encurtar uma URL (autenticado ou não).
+- `GET /api/v1/short-url/r/:short_code` - Redireciona para a URL original e contabiliza um clique.
+
+### 🔐 **Endpoints protegidos** (Apenas para usuários autenticados)
+- `GET /api/v1/short-url/my-urls` - Lista todas as URLs encurtadas do usuário com total de cliques.
+- `DELETE /api/v1/short-url/:short_code` - Deleta uma URL encurtada.
+- `PATCH /api/v1/short-url/:short_code` - Atualiza a URL original.
+
+## 🔧 **Configuração e Execução do Projeto**
+
+Nos passos seguir você executará todo o projeto usando a api em forma de container docker.
+
+### 🐳 **Executando com Docker Compose**
+
+1. **Clone o repositório caso já não tenha feito:**
+   ```sh
+   git clone https://github.com/Matheus-SS/encurtador-url.git
+   cd encurtador-url
+   ```
+
+2. **Suba os containers com Docker Compose:**
+   ```sh
+   docker-compose up --build
+   ```
+
+3. **Execute as migrations do banco de dados:**
+    ```sh
+    docker exec -it shortener-url-api npm run docker-migration:run
+    ```
+
+4. **Acesse a aplicação:**
+   - API: `http://localhost:3000`
+   - API Docs: `http://localhost:3000/docs`
+
+## 📊 Monitoramento com Prometheus e Grafana
+O projeto conta com monitoramento via Prometheus e Grafana. Eles não executados junto com o projeto inicial docker. Fica a seu critério se quer utilizá-lo.
+
+### 🐳 **Executando com Docker Compose de Monitoramento**
+
+1. Suba os containers de monitoramento com o Docker Compose:
+   ```sh
+   Na raiz do projeto execute:
+   docker-compose -f ./monitoring/docker-compose.monitoring.yml up
+   ```
+2. Acesse a aplicação:
+   - Prometheus: `http://localhost:9090`
+   - Grafana: `http://localhost:3010`
+     - Usuário: `admin`
+     - Senha: `admin`
+
+### 📈 Métricas Monitoradas
+A API inclui métricas personalizadas coletadas por Prometheus:
+
+- **`app_duration_metrics`**: Mede a duração das requisições, com rótulos `app_method` (método HTTP), `app_origin` (rota) e `le` (tempo em milisegundos).
+- **`app_error_metrics`**: Contabiliza as requisições com base no método HTTP, rota e status da resposta.
+- **`app_http_signup_metrics`**: Conta requisições para o endpoint de registro (`/api/v1/auth/signup`), categorizadas por origem e status.
+
+<div style="text-align: center; font-size: 16px; font-weight: bold; margin-bottom: 10px;">
+    Este gráfico mostra um teste de carga de requisições para o endpoint de criação de usuário, utilizando o K6 para realizar o load testing.
+</div>
+
+![Grafana gráfico quantidade ](https://i.ibb.co/cSBZSS4b/grafana.png)
+
+
+

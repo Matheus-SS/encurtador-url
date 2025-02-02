@@ -1,0 +1,20 @@
+version: '3.8'
+services:
+  
+  prometheus:
+    image: prom/prometheus:v3.1.0
+    volumes:
+      - "./prometheus.local.yml:/etc/prometheus/prometheus.yml"
+    ports:
+      - 9090:9090
+    networks:
+      - local-app-network-shortener-url
+  grafana:
+    image: grafana/grafana:11.5.0
+    ports:
+      - 3010:3000
+    networks:
+      - local-app-network-shortener-url
+networks:
+  local-app-network-shortener-url:
+    external: true #  referenciar uma rede que já existe
