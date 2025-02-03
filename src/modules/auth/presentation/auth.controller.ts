@@ -1,6 +1,6 @@
 import { Controller, Post, Body, HttpCode, HttpStatus } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { SignUpDto, SignUpDtoResponse } from './dto/signup.dto';
+import { AuthService } from '../application/auth.service';
+import { SignUpDto, SignUpDtoResponse } from '../application/dto/signup.dto';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
@@ -9,7 +9,7 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { SignInDto, SignInDtoResponse } from './dto/signin.dto';
+import { SignInDto, SignInDtoResponse } from '../application/dto/signin.dto';
 
 @Controller('auth')
 export class AuthController {

@@ -1,4 +1,4 @@
-import { UsersEntity } from '@src/modules/users/entities/user.entity';
+import { UsersEntity } from '@src/modules/users/domain/entities/user.entity';
 import { config as dotenvConfig } from 'dotenv';
 import { DataSource } from 'typeorm';
 

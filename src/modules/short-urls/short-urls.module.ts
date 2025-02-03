@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ShortUrlService } from './short-urls.service';
-import { ShortUrlController } from './short-urls.controller';
+import { ShortUrlService } from './application/short-urls.service';
+import { ShortUrlController } from './presentation/short-urls.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ShortUrlEntity } from './entities/short-urls.entity';
+import { ShortUrlEntity } from './domain/entities/short-urls.entity';
 import { SHORT_URLS_REPOSITORY } from '@src/shared/constants';
-import { ShortUrlsRepository } from './short-urls.respository';
+import { ShortUrlsRepository } from './infra/short-urls.respository';
 import { UsersModule } from '@src/modules/users/users.module';
 
 @Module({

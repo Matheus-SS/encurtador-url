@@ -2,11 +2,11 @@ import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration, DatabaseConfig } from './shared/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UsersEntity } from '@src/modules/users/entities/user.entity';
+import { UsersEntity } from '@src/modules/users/domain/entities/user.entity';
 import { UsersModule } from '@src/modules/users/users.module';
 import { AuthModule } from '@src/modules/auth/auth.module';
 import { ShortUrlsModule } from '@src/modules/short-urls/short-urls.module';
-import { ShortUrlEntity } from '@src/modules/short-urls/entities/short-urls.entity';
+import { ShortUrlEntity } from '@src/modules/short-urls/domain/entities/short-urls.entity';
 import {
   makeCounterProvider,
   PrometheusModule,

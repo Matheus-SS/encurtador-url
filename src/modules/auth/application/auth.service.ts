@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { USERS_REPOSITORY } from '@src/shared/constants';
-import { IUsersRepository } from '@src/modules/users/users.repository.interface';
+import { IUsersRepository } from '@src/modules/users/domain/users.repository.interface';
 import * as bcrypt from 'bcrypt';
 import { SignUpDto, SignUpDtoResponse } from './dto/signup.dto';
 import { SignInDto, SignInDtoResponse } from './dto/signin.dto';

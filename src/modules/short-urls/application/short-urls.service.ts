@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateShortUrlDto } from './dto/create-short-url.dto';
+import { CreateShortUrlDto } from '../application/dto/create-short-url.dto';
 import { ConfigService } from '@nestjs/config';
 import {
   REDIS_REPOSITORY,
@@ -9,10 +9,10 @@ import {
 import {
   IShortUrlsRepository,
   ShortUrl,
-} from './short-urls.repository.interface';
-import { IUsersRepository } from '@src/modules/users/users.repository.interface';
-import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
-import { UpdateShortUrlDto } from './dto/update-short-url.dto';
+} from '../domain/short-urls.repository.interface';
+import { IUsersRepository } from '@src/modules/users/domain/users.repository.interface';
+import { GetUserShortUrlsResponse } from '../application/dto/get-url-short-url.dto';
+import { UpdateShortUrlDto } from '../application/dto/update-short-url.dto';
 import { RedisRepository } from '@src/shared/database/redis/redis.repository';
 
 @Injectable()

@@ -11,8 +11,8 @@ import {
   Patch,
   Delete,
 } from '@nestjs/common';
-import { ShortUrlService } from './short-urls.service';
-import { CreateShortUrlDto } from './dto/create-short-url.dto';
+import { ShortUrlService } from '../application/short-urls.service';
+import { CreateShortUrlDto } from '../application/dto/create-short-url.dto';
 import { OptionalJwtAuthGuard } from '@src/shared/guard/optional-jwt-auth.guard';
 import { UserId } from '@src/shared/decorator/user-id.decorator';
 import {
@@ -23,9 +23,9 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
+import { GetUserShortUrlsResponse } from '../application/dto/get-url-short-url.dto';
 import { Response } from 'express';
-import { UpdateShortUrlDto } from './dto/update-short-url.dto';
+import { UpdateShortUrlDto } from '../application/dto/update-short-url.dto';
 import { GetUserId } from '@src/shared/decorator/get-user-id.decorator';
 @Controller('short-url')
 export class ShortUrlController {

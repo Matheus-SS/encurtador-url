@@ -3,8 +3,8 @@ import {
   CreateUser,
   IUsersRepository,
   User,
-} from './users.repository.interface';
-import { UsersEntity } from './entities/user.entity';
+} from '../domain/users.repository.interface';
+import { UsersEntity } from '../domain/entities/user.entity';
 import { Repository } from 'typeorm';
 
 export class UsersRepository implements IUsersRepository {

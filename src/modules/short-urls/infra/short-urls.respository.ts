@@ -5,8 +5,8 @@ import {
   CreateShortUrl,
   IShortUrlsRepository,
   ShortUrl,
-} from './short-urls.repository.interface';
-import { ShortUrlEntity } from './entities/short-urls.entity';
+} from '../domain/short-urls.repository.interface';
+import { ShortUrlEntity } from '../domain/entities/short-urls.entity';
 import { getCurrentDate } from '@src/shared/utils';
 
 @Injectable()

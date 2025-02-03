@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from '@src/modules/auth/auth.service';
+import { AuthService } from '@src/modules/auth/application/auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
