@@ -13,21 +13,44 @@ services:
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
     networks:
-      - local-app-network-shortener-url
+      - app-network-shortener-url
+  shortener-url-api:
+    build: .
+    image: shortener-url-api
+    container_name: shortener-url-api
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - PORT=3000
+      - NODE_ENV=development
+      - CORS_ORIGIN=*
+      - JWT_SECRET=secret
+      - JWT_EXPIRES_IN=12h
+      - JWT_ISSUER=shortener-url-api
+      - API_URL=http://localhost:8000
+      - DATABASE_CLIENT=postgres
+      - DATABASE_HOST=db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=root
+      - DATABASE_PASSWORD=root
+      - DATABASE_NAME=blizzard
+    networks:
+      - app-network-shortener-url
   prometheus:
     image: prom/prometheus:v3.1.0
     volumes:
-      - "./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "./monitoring/prometheus.prod.yml:/etc/prometheus/prometheus.yml"
     ports:
       - 9090:9090
     networks:
-      - local-app-network-shortener-url
+      - app-network-shortener-url
   grafana:
     image: grafana/grafana:11.5.0
     ports:
       - 3010:3000
     networks:
-      - local-app-network-shortener-url
+      - app-network-shortener-url
   kong:
     image: kong:3.7
     restart: on-failure:10
@@ -43,12 +66,12 @@ services:
       - 8000:8000
       - 8001:8001
     volumes:
-      - ./kong/declarative/kong.yml:/kong/declarative/kong.yml
+      - ./kong/declarative/kong.prod.yml:/kong/declarative/kong.yml
     extra_hosts:
       - host.docker.internal:host-gateway
     networks:
-      - local-app-network-shortener-url
+      - app-network-shortener-url
 networks:
-  local-app-network-shortener-url:
-    name: local-app-network-shortener-url #definir nome da rede sem pegar tambem o nome da pasta
+  app-network-shortener-url:
+    name: app-network-shortener-url #definir nome da rede sem pegar tambem o nome da pasta
     driver: bridge

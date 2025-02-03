@@ -133,6 +133,6 @@ export class ShortUrlService {
   }
 
   private generateShortUrlLink(short_code: string): string {
-    return `${this.configService.get('app.apiUrl')}/api/v1/short-url/r/${short_code}`;
+    return `${this.configService.get('app.apiUrl')}/short-url/r/${short_code}`;
   }
 }

@@ -23,7 +23,6 @@ import {
   ApiOkResponse,
   ApiOperation,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@src/shared/guard/jwt-auth.guard';
 import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
 import { Response } from 'express';
 import { UpdateShortUrlDto } from './dto/update-short-url.dto';
@@ -37,7 +36,7 @@ export class ShortUrlController {
   @ApiCreatedResponse({
     description: 'Request successfully',
     example: {
-      url: 'http://localhost:3000/api/v1/short-url/r/bSKSaH',
+      url: 'http://localhost:8000/short-url/r/bSKSaH',
     },
   })
   @ApiBadRequestResponse({
@@ -83,7 +82,6 @@ export class ShortUrlController {
     },
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Get('/my-urls')
   async getUserShortUrls(@UserId() user_id: number) {
     return await this.shortUrlService.getUserShortUrls(user_id);
@@ -141,7 +139,6 @@ export class ShortUrlController {
     },
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Patch(':short_code')
   async updateShortUrl(
     @UserId() user_id: number,
@@ -186,7 +183,6 @@ export class ShortUrlController {
     },
   })
   @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   @Delete(':short_code')
   async removeShortUrl(
     @UserId() user_id: number,

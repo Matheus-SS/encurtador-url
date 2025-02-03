@@ -24,10 +24,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.setGlobalPrefix('/api/v1/', {
-    exclude: ['/metrics'],
-  });
-
   const config = new DocumentBuilder()
     .setTitle('Url shortener')
     .setVersion('1.0')

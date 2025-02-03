@@ -5,6 +5,7 @@
 .env.development
 /postgres
 /prometheus-data
+/postgres-local
 # Logs
 logs
 *.log

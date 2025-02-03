@@ -1,0 +1,105 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: shortener-service-api
+    url: http://shortener-url-api:3000
+    routes:
+      - name: prometheus
+        paths:
+          - /metrics
+        strip_path: false
+        methods:
+          - GET
+      - name: swagger
+        paths:
+          - /docs
+        strip_path: false
+        methods:
+          - GET
+      - name: signin
+        paths:
+          - /auth/signin
+        strip_path: false
+        methods:
+          - POST
+
+      - name: signup
+        paths:
+          - /auth/signup
+        strip_path: false
+        methods:
+          - POST
+
+      - name: create-short-url
+        paths:
+          - /short-url
+        strip_path: false
+        methods:
+          - POST
+        plugins:
+          - name: jwt
+            config:
+              key_claim_name: iss
+              secret_is_base64: false
+              run_on_preflight: true
+              claims_to_verify:
+                - exp
+
+      - name: redirect-short-url
+        paths:
+          - /short-url/r
+        strip_path: false
+        methods:
+          - GET
+
+      - name: my-urls
+        paths:
+          - /short-url/my-urls
+        strip_path: false
+        methods:
+          - GET
+        plugins:
+          - name: jwt
+            config:
+              key_claim_name: iss
+              secret_is_base64: false
+              run_on_preflight: true
+              claims_to_verify:
+                - exp
+
+      - name: delete-short-url
+        paths:
+          - /short-url
+        strip_path: false
+        methods:
+          - DELETE
+        plugins:
+          - name: jwt
+            config:
+              key_claim_name: iss
+              secret_is_base64: false
+              run_on_preflight: true
+              claims_to_verify:
+                - exp
+
+      - name: update-short-url
+        paths:
+          - /short-url
+        strip_path: false
+        methods:
+          - PATCH
+        plugins:
+          - name: jwt
+            config:
+              key_claim_name: iss
+              secret_is_base64: false
+              run_on_preflight: true
+              claims_to_verify:
+                - exp
+
+consumers:
+  - username: shortener-url-api
+    jwt_secrets:
+      - key: shortener-url-api
+        secret: secret

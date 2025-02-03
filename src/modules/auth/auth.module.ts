@@ -17,7 +17,10 @@ import { JwtStrategy } from './jwt.strategy';
         return {
           global: true,
           secret: config.jwtSecret,
-          signOptions: { expiresIn: config.jwtExpiresIn },
+          signOptions: {
+            expiresIn: config.jwtExpiresIn,
+            issuer: config.jwtIssuer,
+          },
         };
       },
     }),

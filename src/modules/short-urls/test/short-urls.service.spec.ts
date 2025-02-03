@@ -113,7 +113,7 @@ describe('ShortUrlService', () => {
         id: 1,
         short_code: 'abc123',
         original_url: 'https://example.com',
-        short_url_link: 'https://mshort.ly/api/v1/short-url/r/abc123',
+        short_url_link: 'https://mshort.ly/short-url/r/abc123',
       },
     ]);
     expect(mockUsersRepository.findById).toHaveBeenCalledWith(1);

@@ -1,4 +1,7 @@
-/node_modules
 /dist
-/coverage
+/node_modules
+/build
+.env.development
 /postgres
+/prometheus-data
+/postgres-local
