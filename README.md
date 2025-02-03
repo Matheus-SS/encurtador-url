@@ -182,7 +182,7 @@ Agora, ao acessar uma URL encurtada, se ela estiver armazenada no cache, a API r
 - Implementar um refresh token JWT e um tempo de expiração adequado.
 - Implementar um suporte a OAuth com provedores como Google e GitHub.
 - Implementar uma divisão em microserviços para escalabilidade e melhor desempenho.
-- Implementar rate limit para evitar ataques de serviço
+- Implementar rate limit para evitar ataques de serviço.
 
 ### Sugestão de novos endpoints
 #### 🔐 **Endpoints protegidos** (Apenas para usuários autenticados)
