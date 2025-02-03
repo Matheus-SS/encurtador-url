@@ -6,6 +6,7 @@ Este projeto tem como objetivo criar uma API para encurtamento de URLs seguindo 
 ## 🌍 Tecnologias Utilizadas
 - **NestJS** para construção da API.
 - **PostgreSQL** como banco de dados relacional.
+- **Redis** para cache das URLs encurtadas.
 - **Docker e Docker Compose** para conteinerização.
 - **Kong API Gateway** para gerenciar as requisições e segurança.
 - **Prometheus e Grafana** para monitoramento.

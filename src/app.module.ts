@@ -14,8 +14,10 @@ import {
 import { CustomMetricsMiddleware } from './shared/middlewares/custom-metrics.middleware';
 import { AppController } from './app.controller';
 import { HealthModule } from './health.module';
+import { RedisModule } from './shared/database/redis/redis.module';
 @Module({
   imports: [
+    RedisModule.forRoot(),
     ConfigModule.forRoot({
       envFilePath: ['.env.development'],
       isGlobal: true,

@@ -1,7 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { NotFoundException } from '@nestjs/common';
-import { SHORT_URLS_REPOSITORY, USERS_REPOSITORY } from '@src/shared/constants';
+import {
+  REDIS_REPOSITORY,
+  SHORT_URLS_REPOSITORY,
+  USERS_REPOSITORY,
+} from '@src/shared/constants';
 import { ShortUrlService } from '@src/modules/short-urls/short-urls.service';
 
 const mockShortUrlsRepository = {
@@ -21,6 +25,12 @@ const mockConfigService = {
   get: jest.fn(),
 };
 
+const mockRedisRepository = {
+  getData: jest.fn(),
+  setData: jest.fn(),
+  delete: jest.fn(),
+};
+
 describe('ShortUrlService', () => {
   let shortUrlService: ShortUrlService;
 
@@ -31,6 +41,7 @@ describe('ShortUrlService', () => {
         { provide: ConfigService, useValue: mockConfigService },
         { provide: SHORT_URLS_REPOSITORY, useValue: mockShortUrlsRepository },
         { provide: USERS_REPOSITORY, useValue: mockUsersRepository },
+        { provide: REDIS_REPOSITORY, useValue: mockRedisRepository },
       ],
     }).compile();
 
@@ -128,30 +139,58 @@ describe('ShortUrlService', () => {
     );
   });
 
-  it('should return original URL when given a valid short code', async () => {
-    mockShortUrlsRepository.findByShortCode.mockResolvedValueOnce({
-      short_code: 'abc123',
-      original_url: 'https://example.com',
-    });
-    mockShortUrlsRepository.incrementClickCount.mockResolvedValue(undefined);
+  it('should return the original URL from cache', async () => {
+    const short_code = 'abc123';
+    const cachedData = JSON.stringify({ original_url: 'https://example.com' });
+    mockRedisRepository.getData.mockResolvedValueOnce(cachedData);
 
-    const result = await shortUrlService.getOriginalUrl('abc123');
+    const result = await shortUrlService.getOriginalUrl(short_code);
 
     expect(result).toEqual({ url: 'https://example.com' });
-    expect(mockShortUrlsRepository.findByShortCode).toHaveBeenCalledWith(
-      'abc123',
-    );
+    expect(mockRedisRepository.getData).toHaveBeenCalledWith(short_code);
+    expect(mockShortUrlsRepository.findByShortCode).not.toHaveBeenCalled();
     expect(mockShortUrlsRepository.incrementClickCount).toHaveBeenCalledWith(
-      'abc123',
+      short_code,
     );
   });
 
-  it('should throw NotFoundException if short URL is not found', async () => {
+  it('should return the original URL from database if not cached', async () => {
+    const short_code = 'abc123';
+    const dbData = { original_url: 'https://example.com' };
+    mockRedisRepository.getData.mockResolvedValue(null);
+    mockShortUrlsRepository.findByShortCode.mockResolvedValue(dbData);
+
+    const result = await shortUrlService.getOriginalUrl(short_code);
+
+    expect(result).toEqual({ url: 'https://example.com' });
+    expect(mockRedisRepository.getData).toHaveBeenCalledWith(short_code);
+    expect(mockShortUrlsRepository.findByShortCode).toHaveBeenCalledWith(
+      short_code,
+    );
+    expect(mockRedisRepository.setData).toHaveBeenCalledWith(
+      short_code,
+      JSON.stringify(dbData),
+      60,
+    );
+    expect(mockShortUrlsRepository.incrementClickCount).toHaveBeenCalledWith(
+      short_code,
+    );
+  });
+
+  it('should throw NotFoundException if the URL is not found', async () => {
+    const short_code = 'abc123';
+    mockRedisRepository.getData.mockResolvedValue(null);
     mockShortUrlsRepository.findByShortCode.mockResolvedValue(null);
 
-    await expect(shortUrlService.getOriginalUrl('nonexistent')).rejects.toThrow(
+    await expect(shortUrlService.getOriginalUrl(short_code)).rejects.toThrow(
       NotFoundException,
     );
+
+    expect(mockRedisRepository.getData).toHaveBeenCalledWith(short_code);
+    expect(mockShortUrlsRepository.findByShortCode).toHaveBeenCalledWith(
+      short_code,
+    );
+    expect(mockShortUrlsRepository.incrementClickCount).not.toHaveBeenCalled();
   });
 
   it('should update a short URL successfully', async () => {
@@ -175,6 +214,7 @@ describe('ShortUrlService', () => {
     expect(mockShortUrlsRepository.update).toHaveBeenCalledWith(1, {
       original_url: 'https://new-url.com',
     });
+    expect(mockRedisRepository.delete).toHaveBeenCalledWith('abc123');
   });
 
   it('should throw NotFoundException if user is not found when updating a short URL', async () => {
@@ -212,6 +252,7 @@ describe('ShortUrlService', () => {
       'abc123',
       { user_id: 1 },
     );
+    expect(mockRedisRepository.delete).toHaveBeenCalledWith('abc123');
     expect(mockShortUrlsRepository.softDeleteByUserId).toHaveBeenCalledWith(1, {
       short_code: 'abc123',
     });

@@ -6,6 +6,7 @@
 /postgres
 /prometheus-data
 /postgres-local
+/redis-data
 # Logs
 logs
 *.log

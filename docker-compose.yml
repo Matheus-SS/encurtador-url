@@ -48,6 +48,17 @@ services:
       - host.docker.internal:host-gateway
     networks:
       - local-app-network-shortener-url
+  redis:
+    image: redis:7.4.2
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+    networks:
+      - local-app-network-shortener-url
+    command: ["redis-server", "--appendonly", "yes"]
 networks:
   local-app-network-shortener-url:
     name: local-app-network-shortener-url #definir nome da rede sem pegar tambem o nome da pasta

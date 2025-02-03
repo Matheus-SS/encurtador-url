@@ -26,6 +26,7 @@ import {
 import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
 import { Response } from 'express';
 import { UpdateShortUrlDto } from './dto/update-short-url.dto';
+import { GetUserId } from '@src/shared/decorator/get-user-id.decorator';
 @Controller('short-url')
 export class ShortUrlController {
   constructor(private readonly shortUrlService: ShortUrlService) {}
@@ -83,7 +84,7 @@ export class ShortUrlController {
   })
   @ApiBearerAuth()
   @Get('/my-urls')
-  async getUserShortUrls(@UserId() user_id: number) {
+  async getUserShortUrls(@GetUserId() user_id: number) {
     return await this.shortUrlService.getUserShortUrls(user_id);
   }
 
@@ -141,7 +142,7 @@ export class ShortUrlController {
   @ApiBearerAuth()
   @Patch(':short_code')
   async updateShortUrl(
-    @UserId() user_id: number,
+    @GetUserId() user_id: number,
     @Param('short_code') short_code: string,
     @Body() updateShortUrlDto: UpdateShortUrlDto,
   ) {
@@ -185,7 +186,7 @@ export class ShortUrlController {
   @ApiBearerAuth()
   @Delete(':short_code')
   async removeShortUrl(
-    @UserId() user_id: number,
+    @GetUserId() user_id: number,
     @Param('short_code') short_code: string,
   ) {
     await this.shortUrlService.deleteShortUrl(user_id, short_code);

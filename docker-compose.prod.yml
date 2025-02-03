@@ -21,6 +21,7 @@ services:
     restart: always
     depends_on:
       - db
+      - redis
     environment:
       - PORT=3000
       - NODE_ENV=development
@@ -29,12 +30,15 @@ services:
       - JWT_EXPIRES_IN=12h
       - JWT_ISSUER=shortener-url-api
       - API_URL=http://localhost:8000
+      - FLAG_DEBUG_REDIS_REPOSITORY=0
       - DATABASE_CLIENT=postgres
       - DATABASE_HOST=db
       - DATABASE_PORT=5432
       - DATABASE_USER=root
       - DATABASE_PASSWORD=root
       - DATABASE_NAME=blizzard
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
     networks:
       - app-network-shortener-url
   prometheus:
@@ -69,6 +73,16 @@ services:
       - ./kong/declarative/kong.prod.yml:/kong/declarative/kong.yml
     extra_hosts:
       - host.docker.internal:host-gateway
+    networks:
+      - app-network-shortener-url
+  redis:
+    image: redis:7.4.2
+    container_name: redis-cache
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
     networks:
       - app-network-shortener-url
 networks:

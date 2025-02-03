@@ -6,6 +6,7 @@ export interface AppConfig {
   jwtExpiresIn: string;
   jwtIssuer: string;
   apiUrl: string;
+  FLAG_DEBUG_REDIS_REPOSITORY: number;
 }
 export interface DatabaseConfig {
   client: string;
@@ -14,6 +15,8 @@ export interface DatabaseConfig {
   user: string;
   password: string;
   name: string;
+  redisHost: string;
+  redisPort: number;
 }
 interface Config {
   app: AppConfig;
@@ -36,6 +39,9 @@ export function validateEnvVars() {
   verifyEnvVars('JWT_EXPIRES_IN');
   verifyEnvVars('JWT_ISSUER');
   verifyEnvVars('API_URL');
+  verifyEnvVars('FLAG_DEBUG_REDIS_REPOSITORY');
+  verifyEnvVars('REDIS_HOST');
+  verifyEnvVars('REDIS_PORT');
   verifyEnvVars('DATABASE_CLIENT');
   verifyEnvVars('DATABASE_HOST');
   verifyEnvVars('DATABASE_PORT');
@@ -54,6 +60,9 @@ export function configuration(): Config {
       jwtExpiresIn: process.env.JWT_EXPIRES_IN as string,
       jwtIssuer: process.env.JWT_ISSUER as string,
       apiUrl: process.env.API_URL as string,
+      FLAG_DEBUG_REDIS_REPOSITORY: +(
+        process.env.FLAG_DEBUG_REDIS_REPOSITORY || 0
+      ),
     },
     database: {
       client: process.env.DATABASE_CLIENT as string,
@@ -62,6 +71,8 @@ export function configuration(): Config {
       user: process.env.DATABASE_USER as string,
       password: process.env.DATABASE_PASSWORD as string,
       name: process.env.DATABASE_NAME as string,
+      redisHost: process.env.REDIS_HOST as string,
+      redisPort: +(process.env.REDIS_PORT || 6379),
     },
   };
 }

@@ -1,11 +1,19 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateShortUrlDto } from './dto/create-short-url.dto';
 import { ConfigService } from '@nestjs/config';
-import { SHORT_URLS_REPOSITORY, USERS_REPOSITORY } from '@src/shared/constants';
-import { IShortUrlsRepository } from './short-urls.repository.interface';
+import {
+  REDIS_REPOSITORY,
+  SHORT_URLS_REPOSITORY,
+  USERS_REPOSITORY,
+} from '@src/shared/constants';
+import {
+  IShortUrlsRepository,
+  ShortUrl,
+} from './short-urls.repository.interface';
 import { IUsersRepository } from '@src/modules/users/users.repository.interface';
 import { GetUserShortUrlsResponse } from './dto/get-url-short-url.dto';
 import { UpdateShortUrlDto } from './dto/update-short-url.dto';
+import { RedisRepository } from '@src/shared/database/redis/redis.repository';
 
 @Injectable()
 export class ShortUrlService {
@@ -15,6 +23,8 @@ export class ShortUrlService {
     private readonly shortUrlsRepository: IShortUrlsRepository,
     @Inject(USERS_REPOSITORY)
     private readonly userRepository: IUsersRepository,
+    @Inject(REDIS_REPOSITORY)
+    private readonly redisRepository: RedisRepository,
   ) {}
 
   async create(createShortUrlDto: CreateShortUrlDto, user_id?: number) {
@@ -59,14 +69,28 @@ export class ShortUrlService {
   }
 
   async getOriginalUrl(short_code: string): Promise<{ url: string }> {
-    const shortUrl = await this.shortUrlsRepository.findByShortCode(short_code);
+    let shortUrl: ShortUrl | null;
+    const shortUrlCache = await this.redisRepository.getData(short_code);
+
+    if (shortUrlCache) {
+      shortUrl = JSON.parse(shortUrlCache);
+    } else {
+      shortUrl = await this.shortUrlsRepository.findByShortCode(short_code);
+
+      if (shortUrl) {
+        await this.redisRepository.setData(
+          short_code,
+          JSON.stringify(shortUrl),
+          60,
+        );
+      }
+    }
 
     if (!shortUrl) {
       throw new NotFoundException('Short url not found');
     }
 
     await this.shortUrlsRepository.incrementClickCount(short_code);
-
     return {
       url: shortUrl.original_url,
     };
@@ -94,6 +118,7 @@ export class ShortUrlService {
       throw new NotFoundException('Short url not found');
     }
 
+    await this.redisRepository.delete(short_code);
     await this.shortUrlsRepository.update(short_url.id, {
       original_url: original_url,
     });
@@ -116,6 +141,8 @@ export class ShortUrlService {
     if (!short_url) {
       throw new NotFoundException('Short url not found');
     }
+
+    await this.redisRepository.delete(short_code);
 
     await this.shortUrlsRepository.softDeleteByUserId(user_id, {
       short_code: short_code,

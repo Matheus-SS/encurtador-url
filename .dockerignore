@@ -2,6 +2,8 @@
 /node_modules
 /build
 .env.development
+.env.example
 /postgres
 /prometheus-data
 /postgres-local
+/redis-data
