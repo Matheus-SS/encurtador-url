@@ -43,7 +43,7 @@ export class GetUserShortUrlsResponse {
   deleted_at?: Date;
 
   @ApiProperty({
-    example: 'http://localhost:3000/api/v1/short-url/r/bSKSaH',
+    example: 'http://localhost:8000/short-url/r/bSKSaH',
   })
   short_url_link: string;
 }

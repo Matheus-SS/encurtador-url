@@ -1,6 +1,4 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration, DatabaseConfig } from './shared/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -14,6 +12,8 @@ import {
   PrometheusModule,
 } from '@willsoto/nestjs-prometheus';
 import { CustomMetricsMiddleware } from './shared/middlewares/custom-metrics.middleware';
+import { AppController } from './app.controller';
+import { HealthModule } from './health.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -47,10 +47,10 @@ import { CustomMetricsMiddleware } from './shared/middlewares/custom-metrics.mid
     UsersModule,
     AuthModule,
     ShortUrlsModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
-    AppService,
     makeCounterProvider({
       name: 'count',
       help: 'metric_help',

@@ -11,6 +11,18 @@ services:
         strip_path: false
         methods:
           - GET
+      - name: health
+        paths:
+          - /health
+        strip_path: false
+        methods:
+          - GET
+      - name: root
+        paths:
+          - /
+        strip_path: false
+        methods:
+          - GET
       - name: swagger
         paths:
           - /docs
