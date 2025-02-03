@@ -34,9 +34,6 @@ docker -v
 docker-compose -v
 ```
 
-### 🔹 **Kong API Gateway**
-O **Kong** é utilizado como API Gateway para gerenciar o tráfego, autenticação e controle de rate limit. Verifique se o Kong está instalado corretamente:
-
 ## 🌍 Configuração Inicial
 
 ### 🛠 **Passos para Inicializar o Projeto**
@@ -127,6 +124,10 @@ A API utiliza um banco de dados relacional PostgreSQL com a seguinte estrutura d
 - `GET /short-url/my-urls` - Lista todas as URLs encurtadas do usuário com total de cliques.
 - `DELETE /short-url/:short_code` - Deleta uma URL encurtada.
 - `PATCH /short-url/:short_code` - Atualiza a URL original.
+### 📊 **Monitoramento e Saúde**
+- `GET /metrics` - Exposição de métricas para Prometheus.
+- `GET /health` - Verificação de saúde da API.
+- `GET /` - Endpoint raiz.
 
 ## 🔧 **Configuração e execução do projeto com Docker Compose**
 
@@ -153,7 +154,7 @@ docker exec -it shortener-url-api npm run docker-migration:run
    - API Docs: `http://localhost:8000/docs`
 
 ## 🚀 API Gateway com Kong
-O Kong é utilizado para gerenciar as requisições, autenticação e controle de rate limit.
+O Kong é utilizado para gerenciar as requisições e autenticação.
 - URL do Kong: `http://localhost:8001`
 - Rotas gerenciadas pelo Kong: `http://localhost:8001/routes`
 
@@ -170,3 +171,27 @@ A API inclui métricas personalizadas coletadas por Prometheus:
 
 ![Grafana gráfico quantidade signup](https://res.cloudinary.com/dmc3joteb/image/upload/v1738471776/grafana_pi1ioj.png)
 
+## 📊 Cache com Redis
+A rota `GET /short-url/r/:short_code` agora utiliza **Redis** para armazenar URLs encurtadas temporariamente, reduzindo a carga no banco de dados e melhorando a performance.
+
+Agora, ao acessar uma URL encurtada, se ela estiver armazenada no cache, a API retorna sem precisar consultar o banco de dados! 🚀
+
+## 🔥 **Sugestões de Melhorias**
+- Implementar autenticação com dois fatores (2FA).
+- Implementar um sistema de recuperação de senha com e-mails.
+- Implementar um refresh token JWT e um tempo de expiração adequado.
+- Implementar um suporte a OAuth com provedores como Google e GitHub.
+- Implementar uma divisão em microserviços para escalabilidade e melhor desempenho.
+- Implementar rate limit para evitar ataques de serviço
+
+### Sugestão de novos endpoints
+#### 🔐 **Endpoints protegidos** (Apenas para usuários autenticados)
+- `PATCH /user/profile` - Atualiza o perfil do usuário.
+#### 🌍 **Autenticação com provedores externos (OAuth)**
+- `POST /auth/oauth/google` - Login via Google.
+- `POST /auth/oauth/github` - Login via GitHub.
+#### 🔑 **Autenticação**
+- `POST /auth/refresh` - Gera um novo token JWT com base no refresh token.
+- `POST /auth/reset-password` - Solicita um reset de senha.
+- `POST /auth/2fa/enable` - Ativa autenticação de dois fatores.
+- `POST /auth/2fa/verify` - Verifica o código da autenticação de dois fatores.
